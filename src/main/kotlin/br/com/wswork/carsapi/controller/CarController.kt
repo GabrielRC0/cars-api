@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*
 
 //@CrossOrigin(allowedHeaders =["*"], origins =["*"], exposedHeaders = ["*"])
 @RestController
+@CrossOrigin
 @RequestMapping("/car")
 class CarController{
     @Autowired
@@ -34,16 +35,14 @@ class CarController{
         val result = CarDTO(carSaved)
         return ResponseEntity(result, HttpStatus.CREATED)
     }
-    @CrossOrigin
     @PutMapping("/{id}")
     fun update(@PathVariable id: Long, @RequestBody data: CarDTO):
             ResponseEntity<CarDTO> {
         val carUpdated = service.update(id, data)
-        val result = CarDTO(cars = carUpdated)
+        val result = CarDTO(car = carUpdated)
 
         return ResponseEntity(result, HttpStatus.OK)
     }
-    @CrossOrigin
     @DeleteMapping("/delete/{id}")
     fun delete(@PathVariable id: Long): ResponseEntity<Unit> {
         service.delete(id)

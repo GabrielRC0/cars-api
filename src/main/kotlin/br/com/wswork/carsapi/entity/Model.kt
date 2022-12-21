@@ -1,28 +1,27 @@
 package br.com.wswork.carsapi.entity
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 
 @Entity
-@Table(name = "models")
+@Table(name = "model")
 class Model {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "model_seq")
+    @SequenceGenerator(name = "model_seq", sequenceName = "model_seq", allocationSize = 1)
     var id: Long? = null
 
     @Column(name = "name")
-    var modelName: String? = null
+    var name: String? = null
 
     @Column(name = "fipe_value")
-    var fipeValue: Int? = null
+    var fipeValue: Float? = null
 
     @ManyToOne
     @JoinColumn(name = "brand_id")
-    @JsonIgnore
     var brand: Brand? = null
 
-    @OneToMany(mappedBy = "model", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val model: List<Cars>? = null
+    @OneToMany(mappedBy = "model")
+    val model: List<Car>? = null
 }

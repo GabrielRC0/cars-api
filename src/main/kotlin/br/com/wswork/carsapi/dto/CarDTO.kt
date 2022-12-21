@@ -1,22 +1,25 @@
 package br.com.wswork.carsapi.dto
 
-import br.com.wswork.carsapi.entity.Cars
+import br.com.wswork.carsapi.entity.Car
 import br.com.wswork.carsapi.entity.Model
+import java.util.Date
 
 class CarDTO(
     var id: Long? = null,
-    var created: String? = null,
+    var created: Date? = null,
     var model: Model? = null,
     var year: Int? = null,
     var door: Int? = null,
-    var color: String? = null
+    var color: String? = null,
+    var fuel: String? = null
 ) {
-    constructor(cars: Cars) : this() {
-        id = cars.id
-        created = cars.created.toString()
-        model = cars.model
-        year = cars.year
-        door = cars.door
-        color = cars.color
+    constructor(car: Car) : this() {
+        id = car.id
+        created = car.created
+        model = car.model
+        year = car.year
+        door = car.door
+        color = car.color
+        fuel = car.fuel
     }
 }

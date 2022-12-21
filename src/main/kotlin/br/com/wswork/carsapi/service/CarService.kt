@@ -1,7 +1,7 @@
 package br.com.wswork.carsapi.service
 
 import br.com.wswork.carsapi.dto.CarDTO
-import br.com.wswork.carsapi.entity.Cars
+import br.com.wswork.carsapi.entity.Car
 import br.com.wswork.carsapi.repository.CarRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.crossstore.ChangeSetPersister
@@ -26,7 +26,7 @@ class CarService {
         carList.forEach { _car ->
             val carDto = CarDTO()
             carDto.id = _car.id
-            carDto.created = _car.created.toString()
+            carDto.created = _car.created
             carDto.model = _car.model
             carDto.year = _car.year
             carDto.door = _car.door
@@ -48,7 +48,7 @@ class CarService {
 
     }
 
-    fun findCar(id: Long): Cars {
+    fun findCar(id: Long): Car {
         return repository.findById(id).orElseThrow { ChangeSetPersister.NotFoundException() }
     }
 
@@ -57,7 +57,7 @@ class CarService {
         val carIdFound = repository.findById(id).orElseThrow { ChangeSetPersister.NotFoundException() }
         val carIdDto = CarDTO()
         carIdDto.id = carIdFound.id!!
-        carIdDto.created = carIdFound.created.toString()
+        carIdDto.created = carIdFound.created
         carIdDto.model = carIdFound.model
         carIdDto.year = carIdFound.year
         carIdDto.door = carIdFound.door
@@ -65,7 +65,7 @@ class CarService {
         return (carIdDto)
     }
 
-    fun findAllById(ids: List<Long>): List<Cars> {
+    fun findAllById(ids: List<Long>): List<Car> {
         val carList = repository.findAllById(ids)
         val idsFound = carList.map { it.id }
 
@@ -79,8 +79,8 @@ class CarService {
         return carList
     }
 
-    fun createCar(data: CarDTO): Cars {
-        val newCar = Cars().apply {
+    fun createCar(data: CarDTO): Car {
+        val newCar = Car().apply {
             this.model = data.model
             this.year = data.year
             this.door = data.door
@@ -91,7 +91,7 @@ class CarService {
 
 //
 
-    fun update(id: Long, data: CarDTO): Cars {
+    fun update(id: Long, data: CarDTO): Car {
         val companyFound = findCar(id)
 
         companyFound.apply {
