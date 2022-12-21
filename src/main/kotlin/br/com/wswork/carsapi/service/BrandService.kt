@@ -5,9 +5,7 @@ import br.com.wswork.carsapi.entity.Brand
 import br.com.wswork.carsapi.repository.BrandRepository
 import br.com.wswork.carsapi.util.DtoConverter
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.crossstore.ChangeSetPersister
 import org.springframework.stereotype.Service
-import java.net.http.HttpResponse
 
 @Service
 class BrandService {

@@ -1,8 +1,7 @@
 package br.com.wswork.carsapi.controller
 
-import br.com.wswork.carsapi.dto.BrandDTO
-import br.com.wswork.carsapi.service.BrandService
-import br.com.wswork.carsapi.util.DtoConverter
+import br.com.wswork.carsapi.dto.ModelDTO
+import br.com.wswork.carsapi.service.ModelService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -11,39 +10,40 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @CrossOrigin
-@RequestMapping("/brand")
-class BrandController {
+@RequestMapping("/model")
+class ModelController {
+
     @Autowired
-    lateinit var service: BrandService
+    lateinit var service: ModelService
 
 
     @GetMapping("/get")
-    fun findAll(): ResponseEntity<List<BrandDTO>> {
+    fun findAll(): ResponseEntity<List<ModelDTO>> {
         val serviceGetAll = service.getAll()
         val ok = HttpStatus.OK
         return ResponseEntity(serviceGetAll, ok)
     }
 
     @GetMapping("/get/{id}")
-    fun get(@PathVariable id: Long): ResponseEntity<BrandDTO> {
-        val serviceGetBrandId = service.findBrandId(id)
+    fun get(@PathVariable id: Long): ResponseEntity<ModelDTO> {
+        val serviceGetModelId = service.findModelId(id)
         val ok = HttpStatus.OK
-        return ResponseEntity(serviceGetBrandId, ok)
+        return ResponseEntity(serviceGetModelId, ok)
     }
 
     @PostMapping("/post")
-    fun create(@RequestBody data: BrandDTO): ResponseEntity<BrandDTO> {
-        val brandSaved = service.createBrand(data)
-        val result = DtoConverter.brandEntityToDto(brandSaved)
+    fun create(@RequestBody data: ModelDTO): ResponseEntity<ModelDTO> {
+        val modelSaved = service.createModel(data)
+        val result = ModelDTO(modelSaved)
         val created = HttpStatus.CREATED
         return ResponseEntity(result, created)
     }
 
     @PutMapping("/update/{id}")
-    fun update(@PathVariable id: Long, @RequestBody data: BrandDTO):
-            ResponseEntity<BrandDTO> {
-        val brandUpdated = service.update(id, data)
-        val result = DtoConverter.brandEntityToDto(brandUpdated)
+    fun update(@PathVariable id: Long, @RequestBody data: ModelDTO):
+            ResponseEntity<ModelDTO> {
+        val modelUpdated = service.update(id, data)
+        val result = ModelDTO(modelUpdated)
         val updated = HttpStatus.OK
         return ResponseEntity(result, updated)
     }

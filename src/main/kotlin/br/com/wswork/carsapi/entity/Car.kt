@@ -30,5 +30,5 @@ class Car {
 
     @ManyToOne
     @JoinColumn(name = "model_id")
-    var model: Model? = null
+    var modelId: Model? = null
 }

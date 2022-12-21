@@ -22,6 +22,6 @@ class Model {
     @JoinColumn(name = "brand_id")
     var brand: Brand? = null
 
-    @OneToMany(mappedBy = "model")
-    val model: List<Car>? = null
+    @OneToMany(mappedBy = "modelId")
+    val cars: List<Car>? = null
 }

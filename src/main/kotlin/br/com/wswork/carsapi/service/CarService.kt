@@ -1,7 +1,9 @@
 package br.com.wswork.carsapi.service
 
+import br.com.wswork.carsapi.dto.AllDTO
 import br.com.wswork.carsapi.dto.CarDTO
 import br.com.wswork.carsapi.entity.Car
+import br.com.wswork.carsapi.entity.Model
 import br.com.wswork.carsapi.repository.CarRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.crossstore.ChangeSetPersister
@@ -12,6 +14,9 @@ class CarService {
 
     @Autowired
     lateinit var repository: CarRepository
+
+    @Autowired
+    lateinit var modelService: ModelService
 
     fun getAll(): List<CarDTO> {
         val carList = repository.findAll()
@@ -27,7 +32,7 @@ class CarService {
             val carDto = CarDTO()
             carDto.id = _car.id
             carDto.created = _car.created
-            carDto.model = _car.model
+            carDto.model_id = _car.modelId?.id
             carDto.year = _car.year
             carDto.door = _car.door
             carDto.color = _car.color
@@ -58,7 +63,7 @@ class CarService {
         val carIdDto = CarDTO()
         carIdDto.id = carIdFound.id!!
         carIdDto.created = carIdFound.created
-        carIdDto.model = carIdFound.model
+        carIdDto.model_id = carIdFound.modelId?.id
         carIdDto.year = carIdFound.year
         carIdDto.door = carIdFound.door
         carIdDto.color = carIdFound.color
@@ -80,13 +85,19 @@ class CarService {
     }
 
     fun createCar(data: CarDTO): Car {
-        val newCar = Car().apply {
-            this.model = data.model
-            this.year = data.year
-            this.door = data.door
-            this.color = data.color
+        if (data.model_id != null) {
+            val newModel = modelService.findModel(data.model_id!!)
+            val newCar = Car().apply {
+                this.year = data.year
+                this.door = data.door
+                this.color = data.color
+                this.created = data.created
+                this.modelId = newModel
+            }
+            return repository.save(newCar)
+        } else {
+            throw Exception("Model id cannot be null!")
         }
-        return repository.save(newCar)
     }
 
 //
@@ -95,11 +106,11 @@ class CarService {
         val companyFound = findCar(id)
 
         companyFound.apply {
-            this.id = id
-            this.model = data.model
+            this.id = data.id
             this.year = data.year
             this.door = data.door
             this.color = data.color
+            this.modelId = this.modelId
         }
         return repository.save(companyFound)
     }
@@ -111,6 +122,37 @@ class CarService {
             throw ChangeSetPersister.NotFoundException()
         }
         repository.deleteById(id)
+    }
+
+
+    fun getAllCarsInfo(): List<AllDTO> {
+        val allList = repository.findAll()
+        if (allList.isEmpty()) {
+            throw ChangeSetPersister.NotFoundException()
+        }
+
+        val allDTOlist = ArrayList<AllDTO>()
+
+
+
+        allList.forEach { _all ->
+            val allDto = AllDTO()
+            allDto.idBrand = _all.modelId?.brand?.id
+            allDto.created = _all.created
+            allDto.nameBrand = _all.modelId?.brand?.name
+            allDto.idModel = _all.modelId?.id
+            allDto.nameModel = _all.modelId?.name
+            allDto.fipeValue = _all.modelId?.fipeValue
+            allDto.idCar = _all.id
+            allDto.year = _all.year
+            allDto.door = _all.door
+            allDto.color = _all.color
+            allDto.fuel = _all.fuel
+            allDTOlist.add(allDto)
+        }
+
+
+        return allDTOlist
     }
 }
 
